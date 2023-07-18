@@ -1,11 +1,25 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
-Description: Simple nodejs lambda function
+
 Resources:
-  MyLambdaFunctoin:
+  NextJsFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: NextJsFunction
       Handler: index.handler
-      Runtime: nodejs18.x
-      FunctionName: MyLambdaFunctoin
-      CodeUri: ./src
+      Runtime: nodejs14.x
+      CodeUri: ./
+      MemorySize: 1024
+      Timeout: 30
+      Events:
+        ApiGatewayEvent:
+          Type: Api
+          Properties:
+            Path: /
+            Method: ANY
+
+Outputs:
+  ApiEndpoint:
+    Description: API endpoint URL for the Next.js app
+    Value:
+      Fn::Sub: 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
