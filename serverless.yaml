@@ -1,0 +1,18 @@
+service: nextjs-app
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: prod
+  region: us-east-1
+  environment:
+    NEXT_PUBLIC_API_ENDPOINT: ${ApiEndpoint}
+
+functions:
+  nextjs:
+    handler: .next/serverless/pages/index.js
+    events:
+      - http:
+          path: /
+          method: any
+          cors: true
