@@ -1,25 +1,47 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
+Description: 'This template deploys a basic stuff to get the aws account set up'
+Parameters:
+  S3ArtifactStore:
+    Type: String
+    Description: Name of S3 bucket
 
 Resources:
-  NextJsFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: NextJsFunction
-      Handler: index.handler
-      Runtime: nodejs18.x
-      CodeUri: ./
-      MemorySize: 1024
-      Timeout: 30
-      Events:
-        ApiGatewayEvent:
-          Type: Api
-          Properties:
-            Path: /
-            Method: ANY
 
-Outputs:
-  ApiEndpoint:
-    Description: API endpoint URL for the Next.js app
-    Value:
-      Fn::Sub: 'https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/'
+  # Common Lambda Role
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "lambda-role-example"
+      Description: "Role assigned to lambdas"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource: '*'
+
+  # Lambda
+  Lambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: "lambda-example"
+      Description: "Lambda example"
+      Code: ./src/
+      Handler: lambda.handler
+      Runtime: python3.9
+      Timeout: 900
+      Role: !GetAtt LambdaRole.Arn
+      PackageType: Zip
+      MemorySize: 128
