@@ -40,7 +40,7 @@ Resources:
       Description: "Lambda example"
       Code: ./src/
       Handler: lambda.handler
-      Runtime: python3.9
+      Runtime: nodejs 18.x
       Timeout: 900
       Role: !GetAtt LambdaRole.Arn
       PackageType: Zip
