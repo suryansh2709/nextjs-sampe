@@ -1,8 +1,0 @@
-Transform: AWS::Serverless-2016-10-31
-Resources:
-  NextjsApp:
-    Type: AWS::Serverless::Application
-    Properties:
-      Location:
-        ApplicationId: arn:aws:serverlessrepo:us-east-1:123456789012:applications/nextjs-app
-        SemanticVersion: 1.0.0
